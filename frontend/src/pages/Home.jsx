@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  const [tipIndex, setTipIndex] = useState(0);
+
+  const nextTip = () => {
+    setTipIndex((prev) => (prev + 1) % TIPS.length);
+  };
+
+  const prevTip = () => {
+    setTipIndex((prev) => (prev - 1 + TIPS.length) % TIPS.length);
+  };
+
   return (
     <div className="w-full flex flex-col font-sans">
       {/* -----------------------------------------------------
-          SECTION 1: 히어로 영역 (배경색 + 검색 + 오늘의 팁 + 지도)
+            SECTION 1: 히어로 영역 (배경색  + 검색 + 오늘의 팁 + 지도)
       ----------------------------------------------------- */}
       <section className="bg-orange-50 py-12 md:py-16">
         <div className="container mx-auto px-4">
@@ -40,23 +50,16 @@ const Home = () => {
               {/* 인기 검색어 */}
               <div className="flex gap-4 text-sm text-gray-600 mb-10 px-2">
                 <span className="font-bold text-gray-800">인기 검색어</span>
-                <span className="cursor-pointer hover:text-amber-700 hover:underline">
-                  1. 송파구 공공화장실
-                </span>
-                <span className="cursor-pointer hover:text-amber-700 hover:underline">
-                  2. 한강공원
-                </span>
+                <span className="cursor-pointer hover:text-amber-700 hover:underline">1. 송파구 공공화장실</span>
+                <span className="cursor-pointer hover:text-amber-700 hover:underline">2. 한강공원</span>
               </div>
 
               {/* 2. 생활 속 캠페인 (카드) */}
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-100 flex flex-col md:flex-row items-center gap-6">
                 <div className="flex-1">
-                  <span className="text-orange-600 font-bold text-sm mb-1 block">
-                    생활 속 탄소줄이기!
-                  </span>
+                  <span className="text-orange-600 font-bold text-sm mb-1 block">생활 속 탄소줄이기!</span>
                   <h3 className="text-2xl font-extrabold text-gray-800 mb-2">
-                    <span className="text-4xl text-gray-300 mr-2">01</span>물
-                    절약하기!
+                    <span className="text-4xl text-gray-300 mr-2">01</span>물 절약하기!
                   </h3>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     수도꼭지는 적당한 수압(절반이하)으로 조절해서 사용하고,
@@ -65,9 +68,7 @@ const Home = () => {
                 </div>
                 {/* 일러스트 자리 (임시 박스) */}
                 <div className="w-full md:w-48 h-32 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
-                  <span className="text-blue-300 text-xs">
-                    💧 절약 캠페인 이미지
-                  </span>
+                  <span className="text-blue-300 text-xs">💧 절약 캠페인 이미지</span>
                 </div>
               </div>
             </div>
@@ -80,9 +81,7 @@ const Home = () => {
                   <span className="text-3xl">📍</span>
                 </div>
                 <p className="text-gray-600 font-bold">내 주변 화장실 찾기</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  지도를 클릭하여 위치를 허용해주세요
-                </p>
+                <p className="text-xs text-gray-500 mt-1">지도를 클릭하여 위치를 허용해주세요</p>
               </div>
             </div>
           </div>
@@ -90,15 +89,12 @@ const Home = () => {
       </section>
 
       {/* -----------------------------------------------------
-          SECTION 2: 자주 찾는 메뉴 (아이콘 그리드)
+          SECTION 2: 자주 찾는 메뉴
       ----------------------------------------------------- */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-2 mb-6">
             <h2 className="text-2xl font-bold text-gray-800">자주 찾는 메뉴</h2>
-            <button className="text-xs text-gray-400 border border-gray-300 rounded-full px-2 py-0.5 hover:bg-gray-50">
-              ⚙️ 설정하기
-            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -109,14 +105,12 @@ const Home = () => {
                 className="flex items-center gap-4 p-5 rounded-xl bg-orange-50/50 hover:bg-orange-100 transition-colors border border-transparent hover:border-orange-200 group"
               >
                 <div
-                  className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl ${menu.iconBg}`}
+                  className={`w-19 h-19 rounded-full bg-white flex items-center justify-center text-2xl ${menu.iconBg}`}
                 >
                   {menu.icon}
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-800 group-hover:text-amber-700">
-                    {menu.title}
-                  </h4>
+                  <h4 className="font-bold text-gray-800 group-hover:text-amber-700">{menu.title}</h4>
                   <p className="text-xs text-gray-500 mt-1">{menu.desc}</p>
                 </div>
               </Link>
@@ -131,14 +125,11 @@ const Home = () => {
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* 왼쪽: 공지사항 리스트 (2/3 크기) */}
+            {/* 왼쪽: 공지사항 리스트 */}
             <div className="lg:col-span-2 border border-gray-200 rounded-2xl p-6 md:p-8">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">공지사항</h2>
-                <Link
-                  to="/notice"
-                  className="text-sm text-gray-500 hover:text-amber-700 flex items-center"
-                >
+                <Link to="/notice" className="text-sm text-gray-500 hover:text-amber-700 flex items-center">
                   더보기 <span className="text-lg ml-1">+</span>
                 </Link>
               </div>
@@ -148,47 +139,42 @@ const Home = () => {
                     key={idx}
                     className="py-4 flex justify-between items-center hover:bg-gray-50 px-2 rounded transition-colors cursor-pointer"
                   >
-                    <span className="text-gray-700 truncate pr-4">
-                      {notice.title}
-                    </span>
-                    <span className="text-sm text-gray-400 whitespace-nowrap">
-                      {notice.date}
-                    </span>
+                    <span className="text-gray-700 truncate pr-4">{notice.title}</span>
+                    <span className="text-sm text-gray-400 whitespace-nowrap">{notice.date}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* 오른쪽: 배너/팁 (1/3 크기) */}
+            {/* 오른쪽: 팁 */}
             <div className="bg-orange-50 rounded-2xl p-8 flex flex-col justify-between items-center text-center border border-orange-100">
               <div>
                 <span className="text-xs font-bold text-amber-600 bg-white px-2 py-1 rounded-full mb-3 inline-block">
                   알아두면 좋은 Tip!
                 </span>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  한국 화장실 협회
-                </h3>
-                <p className="text-sm text-gray-500">
-                  깨끗하고 아름다운 화장실 문화
-                </p>
+
+                <h3 className="text-xl font-bold text-gray-800 mb-2">{TIPS[tipIndex].title}</h3>
+
+                <p className="text-sm text-gray-500">{TIPS[tipIndex].subtitle}</p>
               </div>
-              {/* 건물 일러스트 (CSS로 간단히 표현) */}
+
+              {/* 일러스트 */}
               <div className="my-6 w-32 h-32 relative">
-                <div className="absolute inset-x-4 bottom-0 h-24 bg-blue-200 rounded-lg z-10"></div>
-                <div className="absolute inset-x-8 bottom-4 h-24 bg-blue-300 rounded-lg z-0"></div>
-                <div className="absolute bottom-0 w-full text-4xl flex justify-center z-20">
-                  🏢
-                </div>
+                <img src={TIPS[tipIndex].img} alt="Tip Image" />
               </div>
 
               {/* 슬라이드 컨트롤러 */}
               <div className="flex items-center gap-2 bg-white rounded-full px-3 py-1 shadow-sm">
-                <span className="text-xs font-bold">1 / 3</span>
+                <span className="text-xs font-bold">
+                  {tipIndex + 1} / {TIPS.length}
+                </span>
+
                 <div className="flex gap-1">
-                  <button className="w-5 h-5 rounded-full hover:bg-gray-100 text-gray-400 text-xs">
+                  <button onClick={prevTip} className="w-5 h-5 rounded-full hover:bg-gray-100 text-gray-400 text-xs">
                     {"<"}
                   </button>
-                  <button className="w-5 h-5 rounded-full hover:bg-gray-100 text-gray-400 text-xs">
+
+                  <button onClick={nextTip} className="w-5 h-5 rounded-full hover:bg-gray-100 text-gray-400 text-xs">
                     {">"}
                   </button>
                 </div>
@@ -205,10 +191,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-6">
             <h2 className="text-2xl font-bold text-gray-800">급똥지도 소개</h2>
-            <Link
-              to="/about"
-              className="text-sm text-gray-500 hover:text-amber-700 flex items-center"
-            >
+            <Link to="/about" className="text-sm text-gray-500 hover:text-amber-700 flex items-center">
               더보기 <span className="text-lg ml-1">+</span>
             </Link>
           </div>
@@ -219,7 +202,7 @@ const Home = () => {
                 key={idx}
                 className="border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-shadow group"
               >
-                <div className="h-40 bg-gray-50 flex items-center justify-center relative overflow-hidden">
+                <div className="h-48 bg-gray-50 flex items-center justify-center relative overflow-hidden">
                   {/* 배경 장식 */}
                   <div className="absolute w-64 h-64 bg-white/50 rounded-full -top-10 -right-10 blur-xl"></div>
                   <div className="text-6xl drop-shadow-md z-10 transform group-hover:scale-110 transition-transform duration-300">
@@ -230,12 +213,8 @@ const Home = () => {
                   <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded mb-3 inline-block border border-amber-100">
                     {card.tag}
                   </span>
-                  <h3 className="text-lg font-bold text-gray-800 mb-2">
-                    {card.title}
-                  </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3">
-                    {card.desc}
-                  </p>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">{card.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed mb-4 line-clamp-3">{card.desc}</p>
                   <Link
                     to={card.link}
                     className="text-sm font-bold text-gray-400 group-hover:text-amber-700 flex items-center gap-1 transition-colors"
@@ -253,7 +232,7 @@ const Home = () => {
 };
 
 // ----------------------------------------------------------------------
-// DATA (데이터는 나중에 따로 파일로 분리해도 됩니다)
+// DATA
 // ----------------------------------------------------------------------
 
 const QUICK_MENUS = [
@@ -261,28 +240,24 @@ const QUICK_MENUS = [
     title: "공지사항",
     desc: "대한민국의 공공화장실을 세계적인 명품으로",
     icon: "🏆",
-    iconBg: "bg-yellow-100",
     path: "/notice",
   },
   {
     title: "재미있는 화장실 이야기",
     desc: "화장실에 대한 이모저모",
     icon: "📝",
-    iconBg: "bg-orange-100",
     path: "/story",
   },
   {
     title: "배움터",
     desc: "깨끗하고 안전한 화장실 문화 정착",
     icon: "📄",
-    iconBg: "bg-blue-100",
     path: "/learn",
   },
   {
     title: "FAQ",
     desc: "궁금한 사항들은 이곳에 남겨주세요",
     icon: "🎧",
-    iconBg: "bg-green-100",
     path: "/faq",
   },
 ];
@@ -305,30 +280,47 @@ const NOTICES = [
     date: "2025-02-10",
   },
   {
-    title:
-      "인공지능(AI) 기술을 활용해 공중 화장실을 효율적으로 관리할 수 있는 방안",
+    title: "인공지능(AI) 기술을 활용해 공중 화장실을 효율적으로 관리할 수 있는 방안",
     date: "2025-02-07",
+  },
+];
+
+const TIPS = [
+  {
+    title: "한국 화장실 협회",
+    subtitle: "깨끗하고 아름다운 화장실 문화",
+    img: "/building.svg",
+  },
+  {
+    title: "공중화장실 관리 TIP",
+    subtitle: "누구나 지켜야 할 기본 매너",
+    img: "/clean.svg",
+  },
+  {
+    title: "화장실 안전수칙",
+    subtitle: "위급 상황 대비 안내",
+    img: "/safe.svg",
   },
 ];
 
 const BOTTOM_CARDS = [
   {
     tag: "사업",
-    emoji: "⚙️",
+    emoji: <img src="/ptrms.svg" alt="세팅" />,
     title: "공중화장실 원격관리시스템(PTRMS)",
     desc: "IT 기술을 활용해 공중화장실을 보다 효율적이고 안전하게 관리하기 위한 스마트 시스템으로 단순한 시설 관리 수준을 넘어서는 혁신 기술입니다.",
     link: "/about/system",
   },
   {
     tag: "설문",
-    emoji: "📊",
+    emoji: <img src="/reserch.svg" alt="검색" />,
     title: "전국 공중화장실 실태조사",
     desc: "전국 공중화장실 관리실태 조사와 비교평가를 통해 공중화장실 미비점 개선 및 선진화장실문화 정착과 기본정책 자료로 활용하고자 합니다.",
     link: "/about/survey",
   },
   {
     tag: "행사",
-    emoji: "🚽",
+    emoji: <img src="/toilet.svg" alt="화장실" />,
     title: "사랑의 화장실 지어주기",
     desc: "우리 주변을 둘러보면 아직까지도 더럽고 불결한 화장실을 그대로 사용하거나 이마저도 없어 불편한 생활을 하는 이웃들이 너무나도 많이 있습니다.",
     link: "/about/campaign",

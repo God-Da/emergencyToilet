@@ -11,10 +11,10 @@
 
 #### 2025.09.22 프로젝트 생성
 
-- **maven vs gradle** : 그 간 혼자 프로젝트를 진행할 때 gradle 을 사용했지만 사용함에 있어 충분히 이해하지 못했기 때문에, 개인 프로젝트를 진행하는 겸 학교에서도 배우고 있는 maven으로 개발하고자 함
-- **Monolithic vs Multi-module**: 항상 멀티 모듈로 프로젝트를 구성했으나, 이번 프로젝트는 단일 모듈로 진행하고자 함. 이유는 프로젝트가 크지 않고, 멀티 모듈로 구성할 경우 오히려 복잡도가 증가할 수 있기 때문
-- **Database**: 기존 프로젝트에서는 aws rds을 사용했으나, 이번 프로젝트에서는 MySQL을 사용하고자 함. 사실 추후 aws rds로 이전할 수도 있지만, 현재로서는 로컬에서 개발하는 것이 더 편리하기 때문
-- npm start
+-   **maven vs gradle** : 그 간 혼자 프로젝트를 진행할 때 gradle 을 사용했지만 사용함에 있어 충분히 이해하지 못했기 때문에, 개인 프로젝트를 진행하는 겸 학교에서도 배우고 있는 maven으로 개발하고자 함
+-   **Monolithic vs Multi-module**: 항상 멀티 모듈로 프로젝트를 구성했으나, 이번 프로젝트는 단일 모듈로 진행하고자 함. 이유는 프로젝트가 크지 않고, 멀티 모듈로 구성할 경우 오히려 복잡도가 증가할 수 있기 때문
+-   **Database**: 기존 프로젝트에서는 aws rds을 사용했으나, 이번 프로젝트에서는 MySQL을 사용하고자 함. 사실 추후 aws rds로 이전할 수도 있지만, 현재로서는 로컬에서 개발하는 것이 더 편리하기 때문
+-   npm start
 
 #### 2025.09.29 프로젝트 제거 및 재생성
 
@@ -25,14 +25,56 @@
 어쩔 수 없이 걍 밀어버리는거야. 이후 재 생성한 프로젝트를 기준으로 기술하겠다..
 ```
 
-- **maven vs gradle** : 나는 maven을 이겨낼 수 없었다. maven이 더 간단하다고 누가 그랬음? 그냥... gradle 쓸 것
-- **Monolithic vs Multi-module**: 하던 맛이 좋은 법, 나는 한눈에 디렉토리가 구분되는 멀티 모듈이 더 좋다...
-- **Database**: MySQL로 하지요 ㅎㅎ
-- **vite**: 이번에 vite를 새로 써봤어요. 공식문서 보면서 공부해서 적용시켜 봐야징 ㅎㅎ
-- **tailwinds**: v3아니고 v4로 함 깔아봄. 사실 이것때문에 vite 사용한것 공식문서 보니까 vite로 까는 법 알려주길래 바로 써봄
+-   **maven vs gradle** : 나는 maven을 이겨낼 수 없었다. maven이 더 간단하다고 누가 그랬음? 그냥... gradle 쓸 것
+-   **Monolithic vs Multi-module**: 하던 맛이 좋은 법, 나는 한눈에 디렉토리가 구분되는 멀티 모듈이 더 좋다...
+-   **Database**: MySQL로 하지요 ㅎㅎ
+-   **vite**: 이번에 vite를 새로 써봤어요. 공식문서 보면서 공부해서 적용시켜 봐야징 ㅎㅎ
+-   **tailwinds**: v3아니고 v4로 함 깔아봄. 사실 이것때문에 vite 사용한것 공식문서 보니까 vite로 까는 법 알려주길래 바로 써봄
 
 #### 2025.11.24 재생성
 
+```
 tailwinds v4 좋다고 누가 했냐?
 프로젝트구성이 백-프론트 다 꼬여가지고 걍 리액트부터 CRA방식으로 싹 다 재구성함...
 ㅇㅇ.. 3주만에 웹사이트 2개? 만들어볼게
+```
+
+---
+
+### 프로젝트 설치
+
+#### Frontend
+
+0. 설정 초기화
+
+```
+# 1. 기존 설치 삭제
+yarn remove tailwindcss postcss autoprefixer
+
+# 2. 호환성 좋은 v3 버전으로 재설치
+yarn add -D tailwindcss@^3.4.1 postcss autoprefixer
+```
+
+1. React프로젝트 생성 (Yarn)
+
+```
+
+# yarn을 이용해 frontend 폴더 생성 및 React 설치
+
+yarn create react-app frontend
+
+```
+
+2. Tailwind CSS
+
+```
+
+# 1. 라이브러리 설치
+
+yarn add -D tailwindcss postcss autoprefixer
+
+# 2. 설정 파일 생성 (tailwind.config.js, postcss.config.js)
+
+npx tailwindcss init -p
+
+```
