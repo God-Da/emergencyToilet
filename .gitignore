@@ -1,0 +1,51 @@
+# ==========================
+# 1. IDE 및 운영체제 (공통)
+# ==========================
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# IntelliJ (나중에 백엔드 쓸 때 필요)
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ==========================
+# 2. Frontend (React + Yarn)
+# ==========================
+# 의존성 패키지 (가장 중요!)
+node_modules/
+
+# 빌드 결과물
+build/
+dist/
+
+# Yarn 관련 로그 및 캐시
+yarn-error.log
+.pnp
+.pnp.js
+.yarn/
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# 환경변수 파일 (보안상 필수 제외)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 테스팅 커버리지
+coverage/
+
+# ==========================
+# 3. Backend (Spring Boot) - 미리 공간 확보
+# ==========================
+# 나중에 백엔드 설치할 때 여기에 추가하면 됩니다.
