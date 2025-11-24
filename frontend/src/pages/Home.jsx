@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
+  const [campIndex, setCampIndex] = useState(0);
+
+  const nextCamp = () => setCampIndex((prev) => (prev + 1) % CAMPAIGN.length);
+  const prevCamp = () => setCampIndex((prev) => (prev - 1 + CAMPAIGN.length) % CAMPAIGN.length);
+
   const [tipIndex, setTipIndex] = useState(0);
 
   const nextTip = () => {
@@ -54,21 +59,44 @@ const Home = () => {
                 <span className="cursor-pointer hover:text-amber-700 hover:underline">2. 한강공원</span>
               </div>
 
-              {/* 2. 생활 속 캠페인 (카드) */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-100 flex flex-col md:flex-row items-center gap-6">
+              {/* 2. 생활 속 캠페인 */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-orange-100 flex flex-col md:flex-row items-center gap-6 relative">
+                {/* 텍스트 영역 */}
                 <div className="flex-1">
                   <span className="text-orange-600 font-bold text-sm mb-1 block">생활 속 탄소줄이기!</span>
+
                   <h3 className="text-2xl font-extrabold text-gray-800 mb-2">
-                    <span className="text-4xl text-gray-300 mr-2">01</span>물 절약하기!
+                    <span className="text-4xl text-gray-300 mr-2">{CAMPAIGN[campIndex].id}</span>
+                    {CAMPAIGN[campIndex].title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    수도꼭지는 적당한 수압(절반이하)으로 조절해서 사용하고,
-                    <br />물 일 보기 전 물 내리는 행위는 금지해주세요!
+                  <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+                    {CAMPAIGN[campIndex].desc}
                   </p>
                 </div>
-                {/* 일러스트 자리 (임시 박스) */}
-                <div className="w-full md:w-48 h-32 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
-                  <span className="text-blue-300 text-xs">💧 절약 캠페인 이미지</span>
+
+                {/* 일러스트 자리 */}
+                <div className="w-full md:w-48 h-32 rounded-lg flex items-center justify-center">
+                  <img
+                    src={CAMPAIGN[campIndex].img}
+                    alt={CAMPAIGN[campIndex].title}
+                    className="w-44 h-auto object-contain"
+                  />
+                </div>
+
+                {/* 슬라이드 버튼 */}
+                <div className="absolute bottom-4 right-4 flex gap-2">
+                  <button
+                    onClick={prevCamp}
+                    className="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 hover:bg-orange-200 text-sm leading-none"
+                  >
+                    {"<"}
+                  </button>
+                  <button
+                    onClick={nextCamp}
+                    className="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center text-orange-500 hover:bg-orange-200 text-sm leading-none"
+                  >
+                    {">"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -126,7 +154,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* 왼쪽: 공지사항 리스트 */}
-            <div className="lg:col-span-2 border border-gray-200 rounded-2xl p-6 md:p-8">
+            <div className="lg:col-span-2 border border-gray-200 rounded-2xl p-6 md:p-8 h-[420px] flex flex-col">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">공지사항</h2>
                 <Link to="/notice" className="text-sm text-gray-500 hover:text-amber-700 flex items-center">
@@ -147,7 +175,7 @@ const Home = () => {
             </div>
 
             {/* 오른쪽: 팁 */}
-            <div className="bg-orange-50 rounded-2xl p-8 flex flex-col justify-between items-center text-center border border-orange-100">
+            <div className="bg-orange-50 rounded-2xl p-8 flex flex-col justify-between items-center text-center border border-orange-100 h-[420px]">
               <div>
                 <span className="text-xs font-bold text-amber-600 bg-white px-2 py-1 rounded-full mb-3 inline-block">
                   알아두면 좋은 Tip!
@@ -159,8 +187,9 @@ const Home = () => {
               </div>
 
               {/* 일러스트 */}
-              <div className="my-6 w-32 h-32 relative">
-                <img src={TIPS[tipIndex].img} alt="Tip Image" />
+              <div>
+                {/* <div className="my-6 w-33 h-33 relative"> */}
+                <img src={TIPS[tipIndex].img} className="w-[180px] h-[180px] object-contain" />
               </div>
 
               {/* 슬라이드 컨트롤러 */}
@@ -234,6 +263,26 @@ const Home = () => {
 // ----------------------------------------------------------------------
 // DATA
 // ----------------------------------------------------------------------
+const CAMPAIGN = [
+  {
+    id: "01",
+    title: "물 절약하기!",
+    desc: "수도꼭지는 적당한 수압(절반 이하)으로 조절해서 사용하고,\n물 일 보기 전 물 내리는 행위는 금지해주세요!",
+    img: "/campaign1.svg",
+  },
+  {
+    id: "02",
+    title: "개인 손수건 사용하기!",
+    desc: "손을 씻은 후 물을 몇 번 털어낸 다음 개인손수건을 사용해요,\n 손수건 사용으로 종이타월을 만들기 위해 베어지는 나무를 지킬 수 있어요!",
+    img: "/campaign2.svg",
+  },
+  {
+    id: "03",
+    title: "화장실에 비데가 있는 경우!",
+    desc: "변기 사용후 커버를 내리면 좌변기 난방을 유지하는 전력을 줄일 수 있어요!\n여름에는 좌변기 난방 기능을 사용하지 않거나 설정 온도를 낮게 설정하는 것이 좋아요.",
+    img: "/campaign3.svg",
+  },
+];
 
 const QUICK_MENUS = [
   {
