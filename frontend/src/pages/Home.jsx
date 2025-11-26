@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import KakaoMap from "../components/Kakaomap";
 
 const Home = () => {
   const [campIndex, setCampIndex] = useState(0);
@@ -101,16 +102,17 @@ const Home = () => {
               </div>
             </div>
 
-            {/* 오른쪽: 내 위치 지도 (플레이스홀더) */}
-            <div className="w-full lg:w-[400px] bg-gray-200 rounded-2xl overflow-hidden shadow-inner flex items-center justify-center min-h-[300px] relative group cursor-pointer">
-              <div className="absolute inset-0 bg-gray-300/50 group-hover:bg-gray-300/30 transition-colors"></div>
-              <div className="text-center z-10">
+            {/* 오른쪽: 내 위치 카카오맵 */}
+            <div className="w-full lg:w-[400px] h-[300px] lg:h-auto bg-gray-100 rounded-2xl overflow-hidden shadow-inner relative border border-gray-200">
+              <KakaoMap />
+
+              {/* <div className="text-center z-10">
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
                   <span className="text-3xl">📍</span>
                 </div>
                 <p className="text-gray-600 font-bold">내 주변 화장실 찾기</p>
-                <p className="text-xs text-gray-500 mt-1">지도를 클릭하여 위치를 허용해주세요</p>
-              </div>
+               yarn <p className="text-xs text-gray-500 mt-1">지도를 클릭하여 위치를 허용해주세요</p>
+              </div> */}
             </div>
           </div>
         </div>
@@ -279,7 +281,7 @@ const CAMPAIGN = [
   {
     id: "03",
     title: "화장실에 비데가 있는 경우!",
-    desc: "변기 사용후 커버를 내리면 좌변기 난방을 유지하는 전력을 줄일 수 있어요!\n여름에는 좌변기 난방 기능을 사용하지 않거나 설정 온도를 낮게 설정하는 것이 좋아요.",
+    desc: "변기 사용후 커버를 내리면 좌변기 난방을 유지하는 전력을 줄일 수 있어요!\n여름에는 좌변기 난방 기능을 사용하지 않거나 온도를 낮게 설정하는 것이 좋아요.",
     img: "/campaign3.svg",
   },
 ];
