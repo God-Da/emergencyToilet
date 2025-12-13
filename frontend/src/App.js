@@ -22,6 +22,7 @@ import NoticeWrite from "./pages/NoticeWrite";
 import MyReviews from "./pages/MyReviews";
 import MyBookmarks from "./pages/MyBookmarks";
 import ToiletReview from "./pages/ToiletReview";
+import MyPageEdit from "./pages/MyPageEdit";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
             <Route path="/best/story/:id" element={<StoryDetail />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/mypage" element={<MyPageEdit />} />
             <Route path="/mypage/reviews" element={<MyReviews />} />
             <Route path="/mypage/bookmarks" element={<MyBookmarks />} />
             <Route path="/toilet/:id/review" element={<ToiletReview />} />

@@ -1,6 +1,7 @@
 package com.emergency.backend.controller;
 
 import com.emergency.backend.dto.LoginRequestDto;
+import com.emergency.backend.dto.PasswordChangeDto;
 import com.emergency.backend.dto.UserRequestDto;
 import com.emergency.backend.dto.UserResponseDto;
 import com.emergency.backend.service.UserService;
@@ -142,6 +143,43 @@ public class AuthController {
         response.put("success", true);
         response.put("user", user);
         return ResponseEntity.ok(response);
+    }
+    
+    /**
+     * 비밀번호 변경 API
+     * @param passwordChangeDto 비밀번호 변경 요청
+     * @param session HTTP 세션
+     * @return 비밀번호 변경 결과
+     */
+    @PutMapping("/password")
+    public ResponseEntity<Map<String, Object>> changePassword(
+            @RequestBody PasswordChangeDto passwordChangeDto,
+            HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        
+        // 로그인 확인
+        UserResponseDto user = (UserResponseDto) session.getAttribute("user");
+        if (user == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(response);
+        }
+        
+        try {
+            userService.changePassword(user.getId(), passwordChangeDto);
+            response.put("success", true);
+            response.put("message", "비밀번호가 변경되었습니다.");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "비밀번호 변경 중 오류가 발생했습니다.");
+            return ResponseEntity.internalServerError().body(response);
+        }
     }
 }
 

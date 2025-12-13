@@ -1,6 +1,7 @@
 package com.emergency.backend.service;
 
 import com.emergency.backend.domain.User;
+import com.emergency.backend.dto.PasswordChangeDto;
 import com.emergency.backend.dto.UserRequestDto;
 import com.emergency.backend.dto.UserResponseDto;
 import com.emergency.backend.repository.UserRepository;
@@ -78,6 +79,27 @@ public class UserService {
         response.setName(user.getName());
         
         return response;
+    }
+    
+    /**
+     * 비밀번호 변경
+     * @param userId 사용자 ID
+     * @param passwordChangeDto 비밀번호 변경 요청
+     */
+    @Transactional
+    public void changePassword(Long userId, PasswordChangeDto passwordChangeDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        
+        // 현재 비밀번호 확인
+        if (!passwordEncoder.matches(passwordChangeDto.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("현재 비밀번호가 일치하지 않습니다.");
+        }
+        
+        // 새 비밀번호 암호화 및 저장
+        String encodedNewPassword = passwordEncoder.encode(passwordChangeDto.getNewPassword());
+        user.setPassword(encodedNewPassword);
+        userRepository.save(user);
     }
 }
 
