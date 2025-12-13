@@ -2,10 +2,10 @@
 export const NAV_ITEMS = [
   {
     title: "급똥지도란",
-    path: "/about",
+    path: "/find",
     subItems: [
-      { title: "화장실 찾기", path: "/about/find" },
-      { title: "주요/협력업무", path: "/about/business1" },      
+      { title: "화장실 찾기", path: "/find" },
+      { title: "주요/협력업무", path: "/find/business1" },      
     ],
   },
   {
