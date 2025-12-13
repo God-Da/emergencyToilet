@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { useSearchParams } from "react-router-dom";
 import api from "../api";
 
 const Find = () => {
-  const [searchAddress, setSearchAddress] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
+  const [searchAddress, setSearchAddress] = useState(initialSearch);
   const [state, setState] = useState({
     center: { lat: 37.554678, lng: 126.970606 }, // 기본값: 서울역
     isLoading: true,
@@ -16,36 +19,6 @@ const Find = () => {
 
   // toilets가 항상 배열임을 보장하는 헬퍼
   const safeToilets = Array.isArray(toilets) ? toilets : [];
-
-  // 현재 위치 가져오기
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setState((prev) => ({
-            ...prev,
-            center: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            },
-            isLoading: false,
-          }));
-        },
-        (err) => {
-          console.log("위치 가져오기 실패:", err);
-          setState((prev) => ({
-            ...prev,
-            isLoading: false,
-          }));
-        }
-      );
-    } else {
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-      }));
-    }
-  }, []);
 
   // 주소 기반 화장실 검색
   const searchToilets = async (address) => {
@@ -94,10 +67,54 @@ const Find = () => {
     }
   };
 
+  // URL 파라미터에서 검색어 가져오기
+  useEffect(() => {
+    const searchParam = searchParams.get("search");
+    if (searchParam) {
+      setSearchAddress(searchParam);
+      // URL 파라미터가 있으면 자동으로 검색 실행
+      searchToilets(searchParam);
+    }
+  }, [searchParams]);
+
+  // 현재 위치 가져오기
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setState((prev) => ({
+            ...prev,
+            center: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+            isLoading: false,
+          }));
+        },
+        (err) => {
+          console.log("위치 가져오기 실패:", err);
+          setState((prev) => ({
+            ...prev,
+            isLoading: false,
+          }));
+        }
+      );
+    } else {
+      setState((prev) => ({
+        ...prev,
+        isLoading: false,
+      }));
+    }
+  }, []);
+
   // 검색 버튼 클릭
   const handleSearch = (e) => {
     e.preventDefault();
-    searchToilets(searchAddress);
+    if (searchAddress.trim()) {
+      // URL 파라미터 업데이트
+      setSearchParams({ search: searchAddress.trim() });
+      searchToilets(searchAddress);
+    }
   };
 
   // 화장실 목록 아이템 클릭 시 지도 중심 이동

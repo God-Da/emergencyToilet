@@ -4,6 +4,7 @@ import KakaoMap from "../components/Kakaomap";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const [campIndex, setCampIndex] = useState(0);
 
   const nextCamp = () => setCampIndex((prev) => (prev + 1) % CAMPAIGN.length);
@@ -30,13 +31,26 @@ const Home = () => {
             {/* 왼쪽: 검색 및 캠페인 영역 */}
             <div className="flex-1 flex flex-col justify-center">
               {/* 1. 대형 검색창 */}
-              <div className="relative mb-6">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    navigate(`/find?search=${encodeURIComponent(searchQuery.trim())}`);
+                  }
+                }}
+                className="relative mb-6"
+              >
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="검색어를 입력해주세요. (예: 강남역, 시민공원)"
                   className="w-full h-16 pl-6 pr-16 rounded-xl border-2 border-amber-900/10 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 text-lg shadow-sm transition-all"
                 />
-                <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-700 p-2">
+                <button
+                  type="submit"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-700 p-2"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-8 w-8"
@@ -52,13 +66,23 @@ const Home = () => {
                     />
                   </svg>
                 </button>
-              </div>
+              </form>
 
               {/* 인기 검색어 */}
               <div className="flex gap-4 text-sm text-gray-600 mb-10 px-2">
                 <span className="font-bold text-gray-800">인기 검색어</span>
-                <span className="cursor-pointer hover:text-amber-700 hover:underline">1. 문정역</span>
-                <span className="cursor-pointer hover:text-amber-700 hover:underline">2. 문정</span>
+                <span
+                  className="cursor-pointer hover:text-amber-700 hover:underline"
+                  onClick={() => navigate("/find?search=" + encodeURIComponent("문정역"))}
+                >
+                  1. 문정역
+                </span>
+                <span
+                  className="cursor-pointer hover:text-amber-700 hover:underline"
+                  onClick={() => navigate("/find?search=" + encodeURIComponent("문정"))}
+                >
+                  2. 문정
+                </span>
               </div>
 
               {/* 2. 생활 속 캠페인 */}
