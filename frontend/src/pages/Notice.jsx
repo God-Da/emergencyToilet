@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const Notice = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [notices, setNotices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const isAdmin = user && user.username === "admin";
 
   useEffect(() => {
     fetchNotices();
@@ -33,8 +37,20 @@ const Notice = () => {
       {/* 헤더 섹션 */}
       <div className="bg-orange-50 py-12 border-b border-orange-100">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">공지사항</h1>
-          <p className="text-gray-600">급똥지도의 최신 소식과 공지사항을 확인하세요</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">공지사항</h1>
+              <p className="text-gray-600">급똥지도의 최신 소식과 공지사항을 확인하세요</p>
+            </div>
+            {isAdmin && (
+              <button
+                onClick={() => navigate("/notice/write")}
+                className="px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors"
+              >
+                글쓰기
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

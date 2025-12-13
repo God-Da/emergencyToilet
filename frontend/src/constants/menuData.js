@@ -27,7 +27,7 @@ export const NAV_ITEMS = [
     title: "마이페이지",
     path: "/mypage",
     subItems: [
-      { title: "내 정보 수정", path: "/mypage/info" },
+      { title: "내 정보 수정", path: "/mypage" },
       { title: "내가 쓴 리뷰", path: "/mypage/reviews" },
       { title: "찜한 화장실", path: "/mypage/bookmarks" },
     ],

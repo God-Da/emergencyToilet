@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const NoticeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [notice, setNotice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [allNotices, setAllNotices] = useState([]);
+  
+  const isAdmin = user && user.username === "admin";
 
   useEffect(() => {
     fetchNotice();
@@ -35,6 +39,29 @@ const NoticeDetail = () => {
       setAllNotices(response.data || []);
     } catch (error) {
       console.error("공지사항 목록 조회 실패:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("공지사항을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      const response = await api.delete(`/api/notices/${id}`);
+      
+      if (response.data.success) {
+        alert("공지사항이 삭제되었습니다.");
+        navigate("/notice");
+      } else {
+        alert(response.data.message || "삭제에 실패했습니다.");
+      }
+    } catch (error) {
+      if (error.response?.status === 403) {
+        alert("관리자만 공지사항을 삭제할 수 있습니다.");
+      } else {
+        alert(error.response?.data?.message || "삭제 중 오류가 발생했습니다.");
+      }
     }
   };
 
@@ -120,6 +147,14 @@ const NoticeDetail = () => {
                 목록으로
               </button>
               <div className="flex gap-2">
+                {isAdmin && (
+                  <button
+                    onClick={handleDelete}
+                    className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                  >
+                    삭제
+                  </button>
+                )}
                 {prevNotice && (
                   <button
                     onClick={() => navigate(`/notice/${prevNotice.id}`)}

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -30,28 +31,16 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const response = await api.post(
-        "/api/auth/login",
-        {
-          username: formData.username,
-          password: formData.password,
-        },
-        {
-          withCredentials: true, // 세션 쿠키를 위해 필요
-        }
-      );
-
-      if (response.data.success) {
+      const result = await login(formData.username, formData.password);
+      
+      if (result.success) {
         // 로그인 성공 시 홈으로 이동
         navigate("/");
-        window.location.reload(); // 세션 정보 갱신을 위해
       } else {
-        setError(response.data.message || "로그인에 실패했습니다.");
+        setError(result.message || "로그인에 실패했습니다.");
       }
     } catch (error) {
-      setError(
-        error.response?.data?.message || "로그인 중 오류가 발생했습니다."
-      );
+      setError("로그인 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
