@@ -114,8 +114,8 @@ const Find = () => {
       {/* 헤더 및 검색창 */}
       <div className="bg-orange-50 py-6 border-b border-orange-100">
         <div className="container mx-auto px-4">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">화장실 찾기</h1>
-          <p className="text-sm text-gray-600 mb-4">도로명 주소 또는 지번 주소로 검색하세요</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-1">화장실 찾기</h1>
+          <p className="text-sm text-gray-600 mb-2">도로명 주소 또는 지번 주소로 검색하세요</p>
           
           {/* 검색창 */}
           <form onSubmit={handleSearch} className="relative">
@@ -124,7 +124,7 @@ const Find = () => {
               value={searchAddress}
               onChange={(e) => setSearchAddress(e.target.value)}
               placeholder="예: 강남구, 송파구, 한강대로 등"
-              className="w-full h-14 pl-6 pr-20 rounded-xl border-2 border-amber-900/10 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 text-lg shadow-sm transition-all"
+              className="w-full h-12 pl-6 pr-20 rounded-xl border-2 border-amber-900/10 focus:border-amber-600 focus:ring-2 focus:ring-amber-200 text-lg shadow-sm transition-all"
             />
             <button
               type="submit"
@@ -150,7 +150,7 @@ const Find = () => {
       </div>
 
       {/* 지도 영역 */}
-      <div className="w-full h-[400px] bg-gray-100 relative">
+      <div className="w-full h-[500px] bg-gray-100 relative">
         {!state.isLoading && (
           <Map center={state.center} style={{ width: "100%", height: "100%" }} level={3}>
             {/* 화장실 마커들 */}

@@ -57,8 +57,8 @@ const Home = () => {
               {/* 인기 검색어 */}
               <div className="flex gap-4 text-sm text-gray-600 mb-10 px-2">
                 <span className="font-bold text-gray-800">인기 검색어</span>
-                <span className="cursor-pointer hover:text-amber-700 hover:underline">1. 송파구 공공화장실</span>
-                <span className="cursor-pointer hover:text-amber-700 hover:underline">2. 한강공원</span>
+                <span className="cursor-pointer hover:text-amber-700 hover:underline">1. 문정역</span>
+                <span className="cursor-pointer hover:text-amber-700 hover:underline">2. 문정</span>
               </div>
 
               {/* 2. 생활 속 캠페인 */}
@@ -113,11 +113,11 @@ const Home = () => {
               {/* 클릭 유도 오버레이 */}
               <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/5 transition-colors z-10 pointer-events-none">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                    <span className="text-3xl">📍</span>
+                  <div className="w-12 h-12 bg-white bg-opacity-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <span className="text-xl">📍</span>
                   </div>
-                  <p className="text-gray-700 font-bold">내 주변 화장실 찾기</p>
-                  <p className="text-xs text-gray-500 mt-1">지도를 클릭하여 주변 화장실을 찾아보세요</p>
+                  <p className="text-black bg-white bg-opacity-50 font-bold">내 주변 화장실 찾기</p>
+                  <p className="text-xs text-black bg-white bg-opacity-50 mt-1">지도를 클릭하여 주변 화장실을 찾아보세요</p>
                 </div>
               </div>
             </div>
