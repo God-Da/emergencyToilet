@@ -19,6 +19,9 @@ import QnaDetail from "./pages/QnaDetail";
 import QnaWrite from "./pages/QnaWrite";
 import QnaEdit from "./pages/QnaEdit";
 import NoticeWrite from "./pages/NoticeWrite";
+import MyReviews from "./pages/MyReviews";
+import MyBookmarks from "./pages/MyBookmarks";
+import ToiletReview from "./pages/ToiletReview";
 
 function App() {
   return (
@@ -44,6 +47,9 @@ function App() {
             <Route path="/best/story/:id" element={<StoryDetail />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/mypage/reviews" element={<MyReviews />} />
+            <Route path="/mypage/bookmarks" element={<MyBookmarks />} />
+            <Route path="/toilet/:id/review" element={<ToiletReview />} />
           </Routes>
         </Layout>
       </BrowserRouter>

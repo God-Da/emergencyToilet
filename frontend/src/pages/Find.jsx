@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import api from "../api";
+import { useAuth } from "../context/AuthContext";
+import ReviewModal from "../components/ReviewModal";
 
 const Find = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get("search") || "";
   const [searchAddress, setSearchAddress] = useState(initialSearch);
@@ -16,6 +20,8 @@ const Find = () => {
   const [loading, setLoading] = useState(false);
   const [selectedToilet, setSelectedToilet] = useState(null);
   const [error, setError] = useState(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedToiletForReview, setSelectedToiletForReview] = useState(null);
 
   // toilets가 항상 배열임을 보장하는 헬퍼
   const safeToilets = Array.isArray(toilets) ? toilets : [];
@@ -36,8 +42,8 @@ const Find = () => {
         },
       });
       
-      // 응답 데이터가 배열인지 확인
-      let results = response?.data;
+      // 새로운 응답 형식 처리 (response.data.data)
+      let results = response?.data?.data || response?.data;
       if (!results) {
         console.warn("응답 데이터가 없습니다");
         results = [];
@@ -124,6 +130,53 @@ const Find = () => {
       ...prev,
       center: { lat: toilet.latitude, lng: toilet.longitude },
     }));
+  };
+
+  // 찜 토글
+  const handleBookmarkToggle = async (e, toilet) => {
+    e.stopPropagation(); // 부모 클릭 이벤트 방지
+    
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      if (toilet.isBookmarked) {
+        // 찜 삭제
+        const response = await api.delete(`/api/bookmarks/${toilet.id}`);
+        if (response.data.success) {
+          // 로컬 상태 업데이트
+          setToilets(prev => prev.map(t => 
+            t.id === toilet.id 
+              ? { ...t, isBookmarked: false, bookmarkCount: (t.bookmarkCount || 0) - 1 }
+              : t
+          ));
+        }
+      } else {
+        // 찜 추가
+        const response = await api.post(`/api/bookmarks/${toilet.id}`);
+        if (response.data.success) {
+          // 로컬 상태 업데이트
+          setToilets(prev => prev.map(t => 
+            t.id === toilet.id 
+              ? { ...t, isBookmarked: true, bookmarkCount: (t.bookmarkCount || 0) + 1 }
+              : t
+          ));
+        }
+      }
+    } catch (error) {
+      console.error("찜 처리 실패:", error);
+      alert(error.response?.data?.message || "찜 처리 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 리뷰 보기
+  const handleShowReviews = (e, toilet) => {
+    e.stopPropagation();
+    setSelectedToiletForReview(toilet);
+    setShowReviewModal(true);
   };
 
   return (
@@ -251,10 +304,22 @@ const Find = () => {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h3 className="font-bold text-gray-800 text-lg mb-1 flex items-center gap-2">
-                      <span>🚽</span>
-                      {toilet.name}
-                    </h3>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-bold text-gray-800 text-lg flex items-center gap-2">
+                        <span>🚽</span>
+                        {toilet.name}
+                      </h3>
+                      {/* 찜 버튼 */}
+                      {user && (
+                        <button
+                          onClick={(e) => handleBookmarkToggle(e, toilet)}
+                          className="text-2xl hover:scale-110 transition-transform"
+                          title={toilet.isBookmarked ? "찜 해제" : "찜 추가"}
+                        >
+                          {toilet.isBookmarked ? "❤️" : "🤍"}
+                        </button>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-600 mb-1">
                       {toilet.roadAddress && (
                         <span className="block">📍 도로명: {toilet.roadAddress}</span>
@@ -266,11 +331,79 @@ const Find = () => {
                     {toilet.openTime && (
                       <p className="text-xs text-gray-500 mt-1">개방시간: {toilet.openTime}</p>
                     )}
+                    
+                    {/* 별점 및 리뷰 미리보기 */}
+                    {toilet.averageRating > 0 && (
+                      <div className="mt-3 pt-3 border-t border-gray-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-500">⭐</span>
+                            <span className="font-bold text-gray-800">
+                              {toilet.averageRating.toFixed(1)}
+                            </span>
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            ({toilet.reviewCount || 0}개 리뷰)
+                          </span>
+                        </div>
+                        
+                        {/* 최근 리뷰 1-2개 미리보기 */}
+                        {toilet.recentReviews && toilet.recentReviews.length > 0 && (
+                          <div 
+                            onClick={(e) => handleShowReviews(e, toilet)}
+                            className="space-y-2 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors"
+                          >
+                            {toilet.recentReviews.slice(0, 2).map((review) => (
+                              <div key={review.id} className="text-sm">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="text-yellow-500">
+                                    {"⭐".repeat(review.rating)}
+                                  </span>
+                                  <span className="text-xs text-gray-500">{review.username}</span>
+                                </div>
+                                <p className="text-gray-700 line-clamp-2">{review.content}</p>
+                              </div>
+                            ))}
+                            {toilet.reviewCount > 2 && (
+                              <p className="text-xs text-orange-600 font-medium mt-1">
+                                리뷰 {toilet.reviewCount}개 모두 보기 →
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* 리뷰가 없을 때 리뷰 작성 버튼 (로그인한 경우) */}
+                    {user && (!toilet.recentReviews || toilet.recentReviews.length === 0) && (
+                      <div className="mt-3 pt-3 border-t border-gray-200">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/toilet/${toilet.id}/review`);
+                          }}
+                          className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+                        >
+                          첫 리뷰 작성하기 →
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             ))}
           </div>
+          
+          {/* 리뷰 모달 */}
+          {showReviewModal && selectedToiletForReview && (
+            <ReviewModal
+              toilet={selectedToiletForReview}
+              onClose={() => {
+                setShowReviewModal(false);
+                setSelectedToiletForReview(null);
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

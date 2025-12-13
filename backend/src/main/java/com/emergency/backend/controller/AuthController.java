@@ -7,8 +7,15 @@ import com.emergency.backend.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +67,21 @@ public class AuthController {
         try {
             UserResponseDto user = userService.validateLogin(loginRequest.getUsername(), loginRequest.getPassword());
             
-            // 세션에 사용자 정보 저장
+            // Spring Security Authentication 생성
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                user.getUsername(),
+                null,
+                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))
+            );
+            
+            // SecurityContext에 Authentication 설정
+            SecurityContext securityContext = SecurityContextHolder.getContext();
+            securityContext.setAuthentication(authentication);
+            
+            // 세션에 SecurityContext 저장 (Spring Security가 인식하도록)
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
+            
+            // 세션에 사용자 정보 저장 (컨트롤러에서 사용하기 위해)
             session.setAttribute("user", user);
             session.setAttribute("userId", user.getId());
             session.setAttribute("username", user.getUsername());
@@ -90,6 +111,10 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> logout(HttpSession session) {
         Map<String, Object> response = new HashMap<>();
         
+        // SecurityContext 초기화
+        SecurityContextHolder.clearContext();
+        
+        // 세션 무효화
         session.invalidate();
         
         response.put("success", true);

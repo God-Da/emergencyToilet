@@ -43,12 +43,15 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 추가
             .csrf(csrf -> csrf.disable()) // CSRF 비활성화 (API 서버이므로)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/api/toilets/**", "/api/notices/**", "/api/stories/**", "/api/qna/**").permitAll() // 인증 없이 접근 가능
+                .requestMatchers("/api/auth/**", "/api/toilets/**", "/api/notices/**", "/api/stories/**", "/api/qna/**", "/api/reviews/toilet/**").permitAll() // 인증 없이 접근 가능
+                .requestMatchers("/api/bookmarks/**", "/api/reviews/**").authenticated() // 찜과 리뷰는 인증 필요
                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED)
-            );
+            )
+            .httpBasic(httpBasic -> httpBasic.disable()) // HTTP Basic 인증 비활성화
+            .formLogin(formLogin -> formLogin.disable()); // Form 로그인 비활성화 (API 서버이므로)
         
         return http.build();
     }
