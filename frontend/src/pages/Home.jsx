@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import KakaoMap from "../components/Kakaomap";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [campIndex, setCampIndex] = useState(0);
 
   const nextCamp = () => setCampIndex((prev) => (prev + 1) % CAMPAIGN.length);
@@ -103,16 +104,22 @@ const Home = () => {
             </div>
 
             {/* 오른쪽: 내 위치 카카오맵 */}
-            <div className="w-full lg:w-[400px] h-[300px] lg:h-auto bg-gray-100 rounded-2xl overflow-hidden shadow-inner relative border border-gray-200">
+            <div 
+              className="w-full lg:w-[400px] h-[300px] lg:h-auto bg-gray-100 rounded-2xl overflow-hidden shadow-inner relative border border-gray-200 cursor-pointer group"
+              onClick={() => navigate("/find")}
+            >
               <KakaoMap />
-
-              {/* <div className="text-center z-10">
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
-                  <span className="text-3xl">📍</span>
+              
+              {/* 클릭 유도 오버레이 */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/5 transition-colors z-10 pointer-events-none">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <span className="text-3xl">📍</span>
+                  </div>
+                  <p className="text-gray-700 font-bold">내 주변 화장실 찾기</p>
+                  <p className="text-xs text-gray-500 mt-1">지도를 클릭하여 주변 화장실을 찾아보세요</p>
                 </div>
-                <p className="text-gray-600 font-bold">내 주변 화장실 찾기</p>
-               yarn <p className="text-xs text-gray-500 mt-1">지도를 클릭하여 위치를 허용해주세요</p>
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -222,9 +229,9 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-end mb-6">
             <h2 className="text-2xl font-bold text-gray-800">급똥지도 소개</h2>
-            <Link to="/about" className="text-sm text-gray-500 hover:text-amber-700 flex items-center">
+            {/* <Link to="/about/business1" className="text-sm text-gray-500 hover:text-amber-700 flex items-center">
               더보기 <span className="text-lg ml-1">+</span>
-            </Link>
+            </Link> */}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -309,7 +316,7 @@ const QUICK_MENUS = [
     title: "FAQ",
     desc: "궁금한 사항들은 이곳에 남겨주세요",
     icon: "🎧",
-    path: "/faq",
+    path: "/qna",
   },
 ];
 
@@ -360,21 +367,21 @@ const BOTTOM_CARDS = [
     emoji: <img src="/ptrms.svg" alt="세팅" />,
     title: "공중화장실 원격관리시스템(PTRMS)",
     desc: "IT 기술을 활용해 공중화장실을 보다 효율적이고 안전하게 관리하기 위한 스마트 시스템으로 단순한 시설 관리 수준을 넘어서는 혁신 기술입니다.",
-    link: "/about/system",
+    link: "/about/business1",
   },
   {
     tag: "설문",
     emoji: <img src="/reserch.svg" alt="검색" />,
     title: "전국 공중화장실 실태조사",
     desc: "전국 공중화장실 관리실태 조사와 비교평가를 통해 공중화장실 미비점 개선 및 선진화장실문화 정착과 기본정책 자료로 활용하고자 합니다.",
-    link: "/about/survey",
+    link: "/about/business2",
   },
   {
     tag: "행사",
     emoji: <img src="/toilet.svg" alt="화장실" />,
     title: "사랑의 화장실 지어주기",
     desc: "우리 주변을 둘러보면 아직까지도 더럽고 불결한 화장실을 그대로 사용하거나 이마저도 없어 불편한 생활을 하는 이웃들이 너무나도 많이 있습니다.",
-    link: "/about/campaign",
+    link: "/about/business3",
   },
 ];
 

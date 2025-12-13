@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout"; // 레이아웃 불러오기x
 import Home from "./pages/Home";
 import TestPage from "./pages/TestPage";
+import Find from "./pages/Find";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/test" element={<TestPage />} />
+          <Route path="/find" element={<Find />} />
         </Routes>
       </Layout>
     </BrowserRouter>
